@@ -24,6 +24,7 @@ import org.springframework.batch.item.excel.Sheet;
 import org.springframework.core.io.Resource;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 
@@ -77,12 +78,36 @@ public class PoiItemReader<T> extends AbstractExcelItemReader<T> {
      */
     @Override
     protected void openExcelFile(final Resource resource) throws Exception {
+        String methodName = "openExcelFile() : ";
+        logger.info(methodName + "called");
         workbookStream = resource.getInputStream();
-        if (!workbookStream.markSupported() && !(workbookStream instanceof PushbackInputStream)) {
+        /*if (!workbookStream.markSupported() && !(workbookStream instanceof PushbackInputStream)) {
             throw new IllegalStateException("InputStream MUST either support mark/reset, or be wrapped as a PushbackInputStream");
+        }*/
+        try{
+            logger.info(methodName + "calling factory");
+            this.workbook = WorkbookFactory.create(workbookStream);
+            this.workbook.setMissingCellPolicy(Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+        }catch (Exception e){
+            logger.info(methodName + "Exception occured as " + e.getMessage());
+            e.printStackTrace();
         }
-        this.workbook = WorkbookFactory.create(workbookStream);
-        this.workbook.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
+        logger.info(methodName + "returning");
+    }
+
+    @Override
+    protected void openExcelFile(final File file) throws Exception {
+        String methodName = "openExcelFile() : ";
+        logger.info(methodName + "called with file");
+        try{
+            logger.info(methodName + "calling factory");
+            this.workbook = WorkbookFactory.create(file);
+            this.workbook.setMissingCellPolicy(Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+        }catch (Exception e){
+            logger.info(methodName + "Exception occured as " + e.getMessage());
+            e.printStackTrace();
+        }
+        logger.info(methodName + "returning");
     }
 
 }

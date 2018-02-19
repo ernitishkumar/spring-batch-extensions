@@ -19,10 +19,14 @@ package org.springframework.batch.item.excel.jxl;
 
 import jxl.Workbook;
 import jxl.read.biff.WorkbookParser;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.batch.item.excel.AbstractExcelItemReader;
 import org.springframework.batch.item.excel.Sheet;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
+
+import java.io.File;
 
 /**
  * {@link org.springframework.batch.item.ItemReader} implementation which uses the JExcelApi to read an Excel
@@ -73,4 +77,7 @@ public class JxlItemReader<T> extends AbstractExcelItemReader<T> {
         return this.workbook.getNumberOfSheets();
     }
 
+    @Override
+    protected void openExcelFile(final File file) throws Exception {
+    }
 }

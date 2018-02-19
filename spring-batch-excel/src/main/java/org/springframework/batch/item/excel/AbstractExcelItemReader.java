@@ -27,6 +27,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import java.io.File;
+
 /**
  * {@link org.springframework.batch.item.ItemReader} implementation to read an Excel
  * file. It will read the file sheet for sheet and row for row. It is loosy based on
@@ -108,7 +110,8 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
             return;
         }
 
-        this.openExcelFile(this.resource);
+        //this.openExcelFile(this.resource);
+        this.openExcelFile(this.resource.getFile());
         this.openSheet();
         this.noInput = false;
         if (logger.isDebugEnabled()) {
@@ -179,6 +182,8 @@ public abstract class AbstractExcelItemReader<T> extends AbstractItemCountingIte
      * @throws Exception when the Excel sheet cannot be accessed
      */
     protected abstract void openExcelFile(Resource resource) throws Exception;
+
+    protected abstract void openExcelFile(File file) throws Exception;
 
     /**
      * In strict mode the reader will throw an exception on
